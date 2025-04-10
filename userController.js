@@ -43,3 +43,30 @@ const getTotalImpressions = async (req, res) => {
         res.status(500).json({ message: "Error calculating total impressions", error });
     }
 };
+
+//saving profile Education
+const Education = async (req, res) => {
+    try {
+        const userId = req.user?._id; 
+        const { id, education } = req.body; 
+
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (id === -1) {
+            user.educations.unshift(education); 
+        } else {
+            const index = user.educations.findIndex((item) => item._id.equals(education._id));
+            if (index !== -1) {
+                user.educations[index] = { ...user.educations[index], ...education }; 
+            } else {
+                return res.status(404).json({ message: "Education entry not found" });
+            }
+        }
+        await user.save();
+        res.status(200).json({ message: "Education updated successfully", edu: user.educations });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error occurred while updating education" });
+    }
+};
