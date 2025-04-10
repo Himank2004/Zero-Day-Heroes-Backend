@@ -6,7 +6,6 @@ import { Notification } from "../models/notificationschema.js";
 import { populate } from "dotenv";
 import { Message } from "../models/messageSchema.js";
 //saving profile intro
-
 const Intro = async (req, res) => {
     try {
         const userId = req.user?._id; 
@@ -71,6 +70,23 @@ const Education = async (req, res) => {
     }
 };
 
+const deleteEducation = async (req, res) => {
+    try {
+        const userId = req.user?._id;
+        const { educationId } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.educations = user.educations.filter((education) => !education._id.equals(educationId));
+        await user.save();
+
+        res.status(200).json({ message: "Education deleted successfully", educations: user.educations });
+    } catch (error) {
+        res.status(500).json({ message: "An error occurred while deleting education" });
+    }
+};
+
 //saving profile Experiences
 const Experience = async (req, res) => {
     try {
@@ -114,6 +130,7 @@ const deleteExperience = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting Experience" });
     }
 };
+
 //saving profile About
 const About = async (req, res) => {
     try {
@@ -128,6 +145,7 @@ const About = async (req, res) => {
         res.status(500).json({ message: "An error occurred while updating about" });
     }
 };
+
 // update user skills
 const Skill = async (req, res) => {
     try {
@@ -145,7 +163,6 @@ const Skill = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting Skill" });
     }
 };
-
 
 //SignUp the user
 const SignUp=async(req,res)=>{

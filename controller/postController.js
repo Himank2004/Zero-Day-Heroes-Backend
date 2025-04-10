@@ -1,6 +1,6 @@
 import { User } from "../models/userschema.js"
 import { Post } from "../models/postschema.js"
-import { Comment } from "../models/commentschema.js";
+import { Comment } from "../models/commentsSchema.js";
 import { Notification } from "../models/notificationschema.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
