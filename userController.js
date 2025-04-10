@@ -21,3 +21,25 @@ const Intro = async (req, res) => {
         res.status(500).json({ message: "An error occurred while updating intro" });
     }
 };
+
+const getTotalImpressions = async (req, res) => {
+    const userId=req.user?._id;
+    try {
+        const user = await User.findById(userId).select('posts');
+        if (!user || user.posts.length === 0) {
+            return res.status(200).json({ userId, totalImpressions: 0 });
+        }
+
+     
+        const totalImpressions = await Post.aggregate([
+            { $match: { _id: { $in: user.posts } } },  
+            { $group: { _id: null, totalImpressions: { $sum: "$impression" } } } 
+        ]);
+
+        const impressionsCount = totalImpressions[0]?.totalImpressions || 0;
+        res.status(200).json({ impressions: impressionsCount });
+    } catch (error) {
+        console.error("Error calculating total impressions:", error);
+        res.status(500).json({ message: "Error calculating total impressions", error });
+    }
+};
