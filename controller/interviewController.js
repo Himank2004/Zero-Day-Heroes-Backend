@@ -324,7 +324,7 @@ import {
   
         // Redirect to the results page
         const redirect_url =
-          "https://alokthakur490.github.io/Interview-Mate-frontend/result/";
+          "http://localhost:5173/Zero-Day-Heroes-Frontend/result/";
         return res.json({
           response: current_question,
           redirect: redirect_url,
